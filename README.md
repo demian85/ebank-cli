@@ -4,6 +4,8 @@ This script connects to your BBVA Home Banking and extracts information about yo
 It currently supports parsing accounts and cards details found in your dashboard.
 
 ## Usage
+Google Chrome 59 is needed to use headless mode. You could download Chrome Canary and use alongside your current Chrome stable version.
+https://www.google.com/chrome/browser/canary.html
 ```
 npm i
 ```

@@ -1,0 +1,17 @@
+{
+  "name": "bbva-cli",
+  "version": "0.0.1",
+  "description": "BBVA Home Banking command line interface",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Demian Rodriguez",
+  "license": "ISC",
+  "dependencies": {
+    "chrome-remote-interface": "^0.23.0",
+    "dotenv": "^4.0.0",
+    "lighthouse": "^2.0.0",
+    "table": "^4.0.1"
+  }
+}

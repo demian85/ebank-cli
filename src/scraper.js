@@ -29,7 +29,6 @@ async function createClient() {
 
   await client.Page.enable();
   await client.Runtime.enable();
-  await client.DOM.enable();
 
   return client;
 }

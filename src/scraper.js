@@ -35,10 +35,6 @@ async function createClient() {
 }
 
 module.exports = class Scraper {
-  constructor() {
-
-  }
-
   async init() {
     console.log('Initialising browser...');
     this.launcher = await launchChrome();

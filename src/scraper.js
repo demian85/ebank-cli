@@ -1,6 +1,6 @@
 const fs = require('fs');
 const { ChromeLauncher } = require('lighthouse/lighthouse-cli/chrome-launcher');
-const chrome = require('chrome-remote-interface');
+const CDP = require('chrome-remote-interface');
 
 
 async function launchChrome() {
@@ -24,6 +24,16 @@ async function launchChrome() {
   return launcher;
 }
 
+async function createClient() {
+  const client = await CDP();
+
+  await client.Page.enable();
+  await client.Runtime.enable();
+  await client.DOM.enable();
+
+  return client;
+}
+
 module.exports = class Scraper {
   constructor() {
 
@@ -32,19 +42,18 @@ module.exports = class Scraper {
   async init() {
     console.log('Initialising browser...');
     this.launcher = await launchChrome();
-    this.client = await chrome();
-
-    this.client.on('error', (err) => {
-      throw Error('Cannot connect to Chrome: ', err);
-    });
-
-    await this.client.Page.enable();
-    await this.client.Runtime.enable();
-    await this.client.DOM.enable();
+    this.client = await createClient();
 
     this.initialized = true;
 
     console.log('Initialized\n');
+  }
+
+  async finish () {
+    await this.client.close();
+    this.launcher.kill(); // Kill Chrome.
+
+    this.initialized = false;
   }
 
   async login(credentials) {
@@ -57,10 +66,9 @@ module.exports = class Scraper {
     }
 
     const navigateToLogin = async () => {
-      return new Promise(resolve => {
-        this.client.once('Page.loadEventFired', resolve);
-        this.client.Page.navigate({url: 'https://www.bbvafrances.com.ar/fnetcore/loginClementeApp.html'});
-      })
+      const { Page } = this.client;
+      await Page.navigate({url: 'https://www.bbvafrances.com.ar/fnetcore/loginClementeApp.html'});
+      await Page.loadEventFired();
     }
 
     const fillFormAndSubmit = async () => {
@@ -89,8 +97,13 @@ module.exports = class Scraper {
     }
 
     const waitForSuccess = async () => {
-      return new Promise((resolve) => {
+      return new Promise((resolve, reject) => {
+        // TODO better error detection
+        const timeout = setTimeout(reject, 5000);
+
         this.client.once('Page.loadEventFired', () => {
+          clearTimeout(timeout);
+
           this.client.once('Page.frameDetached', () => {
             this.client.once('Page.loadEventFired', resolve);
           });
@@ -98,15 +111,19 @@ module.exports = class Scraper {
       });
     };
 
-    console.log('Loading login page...');
-    await navigateToLogin();
-    console.log('Loaded\n');
+    try {
+      console.log('Loading login page...');
+      await navigateToLogin();
+      console.log('Loaded\n');
 
-    console.log('Log in...');
-    await fillFormAndSubmit();
+      console.log('Log in...');
+      await fillFormAndSubmit();
+      await waitForSuccess();
+    } catch(e) {
+      await this.finish();
 
-    // TODO handle errors
-    await waitForSuccess();
+      throw new Error('Log in error')
+    }
 
     console.log('Logged in successfully\n');
     this.logged = true;
@@ -115,12 +132,10 @@ module.exports = class Scraper {
   async logout() {
     console.log('Logging out...');
 
-    this.client.once('Page.frameDetached', async () => {
+    this.client.once('Page.frameDetached', () => {
       console.log('Logged out.');
-      await this.client.close();
-      this.launcher.kill(); // Kill Chrome.
 
-      this.initialized = false;
+      this.finish();
     });
 
     const browserCode = () => {

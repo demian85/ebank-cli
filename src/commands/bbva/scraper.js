@@ -1,37 +1,5 @@
 const fs = require('fs');
-const { ChromeLauncher } = require('lighthouse/lighthouse-cli/chrome-launcher');
-const CDP = require('chrome-remote-interface');
-
-
-async function launchChrome() {
-  const launcher = new ChromeLauncher({
-    port: 9222,
-    autoSelectChrome: true, // False to manually select which Chrome install.
-    additionalFlags: [
-      '--window-size=1280,1024',
-      '--disable-gpu',
-      '--headless',
-    ]
-  });
-
-  try {
-    await launcher.run();
-  } catch (e) {
-    await launcher.kill();
-    throw e;
-  }
-
-  return launcher;
-}
-
-async function createClient() {
-  const client = await CDP();
-
-  await client.Page.enable();
-  await client.Runtime.enable();
-
-  return client;
-}
+const { launchChrome, createClient } = require('../../common');
 
 module.exports = class Scraper {
   async init() {

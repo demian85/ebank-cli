@@ -1,21 +1,28 @@
 {
-  "name": "bbva-cli",
+  "name": "ebank-cli",
   "version": "0.0.1",
-  "description": "BBVA Home Banking command line interface",
+  "description": "Extensible Online Banking command line interface",
   "main": "index.js",
+  "bin": {
+    "ebank": "./index.js"
+  },
   "scripts": {
     "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Demian Rodriguez",
+  "author": "Demian Rodriguez <demian85@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "chrome-remote-interface": "^0.23.0",
+    "chrome-remote-interface": "^0.23.2",
     "dotenv": "^4.0.0",
-    "lighthouse": "^2.0.0",
-    "table": "^4.0.1"
+    "lighthouse": "^2.1.0",
+    "table": "^4.0.1",
+    "yargs": "^8.0.1"
   },
   "devDependencies": {
     "eslint": "^3.19.0"
+  },
+  "engines": {
+    "node": ">=7.10"
   }
 }

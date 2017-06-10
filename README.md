@@ -1,4 +1,4 @@
-# Online banking CLI tool
+# Extensible online banking CLI tool
 
 This CLI is extensible and allows you to interact with online banking sites in general.
 Check below for implemented services and examples.

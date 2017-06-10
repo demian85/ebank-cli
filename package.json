@@ -1,7 +1,7 @@
 {
   "name": "ebank-cli",
-  "version": "0.0.1",
-  "description": "Extensible Online Banking command line interface",
+  "version": "1.0.0",
+  "description": "Extensible online banking command line interface",
   "main": "index.js",
   "bin": {
     "ebank": "./index.js"
@@ -11,7 +11,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Demian Rodriguez <demian85@gmail.com>",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "chrome-remote-interface": "^0.23.2",
     "dotenv": "^4.0.0",
@@ -24,5 +24,19 @@
   },
   "engines": {
     "node": ">=7.10"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/demian85/ebank-cli.git"
+  },
+  "keywords": [
+    "online",
+    "banking",
+    "cli",
+    "extensible"
+  ],
+  "bugs": {
+    "url": "https://github.com/demian85/ebank-cli/issues"
+  },
+  "homepage": "https://github.com/demian85/ebank-cli#readme"
 }

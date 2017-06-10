@@ -4,7 +4,7 @@ This CLI is extensible and allows you to interact with online banking sites in g
 Check below for implemented services and examples.
 
 ## Usage
-Google Chrome 59 is needed to use headless mode. You could download [Chrome Canary](https://www.google.com/chrome/browser/canary.html) and use it alongside your current Chrome stable version.
+Google Chrome 59 is needed to use headless mode. You can also download [Chrome Canary](https://www.google.com/chrome/browser/canary.html) and use it alongside your current Chrome stable version.
 
 A global installation is preferred:
 ```
@@ -22,17 +22,17 @@ BBVA_PASSWORD=
 Add specific credentials as needed by other commands.
 
 ## Implemented services
-- BBVA
-- Payoneer
+- [BBVA](https://www.bbvafrances.com.ar/)
+- [Payoneer](https://www.payoneer.com)
 
-You are welcome to submit a new online banking command utility.
+You are welcome to submit a new online banking command utility :)
 
 ## Nice to have features
 - REPL. Would allow you to interact with your home banking session.
 - Transfers
 - Payments
 - Download credit card extract
-- ?
+- Visa Home
 
 ## For developers
 See API docs: https://chromedevtools.github.io/devtools-protocol/

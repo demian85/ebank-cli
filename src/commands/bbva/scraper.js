@@ -3,19 +3,19 @@ const { launchChrome, createClient } = require('../../common');
 
 module.exports = class Scraper {
   async init() {
-    console.log('Initialising browser...');
-    this.launcher = await launchChrome();
-    this.client = await createClient();
+    console.log('Loading...');
 
+    this.launcher = await launchChrome('https://www.bbvafrances.com.ar/fnetcore/loginClementeApp.html');
+    this.client = await createClient();
+    await this.client.Page.loadEventFired();
     this.initialized = true;
 
-    console.log('Initialized\n');
+    console.log('Loaded');
   }
 
   async finish () {
     await this.client.close();
-    this.launcher.kill(); // Kill Chrome.
-
+    this.launcher.kill();
     this.initialized = false;
   }
 
@@ -26,12 +26,6 @@ module.exports = class Scraper {
 
     if (!this.initialized) {
       await this.init();
-    }
-
-    const navigateToLogin = async () => {
-      const { Page } = this.client;
-      await Page.navigate({url: 'https://www.bbvafrances.com.ar/fnetcore/loginClementeApp.html'});
-      await Page.loadEventFired();
     }
 
     const fillFormAndSubmit = async () => {
@@ -45,15 +39,15 @@ module.exports = class Scraper {
             document.querySelector('[name="digitalKey"]').value = password;
             document.querySelector('[name="digitalKey"]').dispatchEvent(new Event('input'));
             document.querySelector('.btn.btn-success.btn-login-modal').click();
-
             resolve();
           };
-
           setTimeout(fillValues, 100);
         });
       };
 
-      return this.client.Runtime.evaluate({
+      console.log('Log in...');
+
+      await this.client.Runtime.evaluate({
         expression: `(${browserCode})(${JSON.stringify(credentials)})`,
         awaitPromise: true,
       });
@@ -75,28 +69,22 @@ module.exports = class Scraper {
     };
 
     try {
-      console.log('Loading login page...');
-      await navigateToLogin();
-      console.log('Loaded\n');
-
-      console.log('Log in...');
       await fillFormAndSubmit();
       await waitForSuccess();
-    } catch(e) {
+      console.log('Success')
+      this.logged = true;
+    } catch(err) {
       await this.finish();
-
+      console.error(err);
       throw new Error('Log in error')
     }
-
-    console.log('Logged in successfully\n');
-    this.logged = true;
   }
 
   async logout() {
     console.log('Logging out...');
 
     this.client.once('Page.frameDetached', () => {
-      console.log('Logged out.');
+      console.log('Success');
 
       this.finish();
     });
@@ -115,7 +103,8 @@ module.exports = class Scraper {
       throw new Error('You must be logged in');
     }
 
-    console.log('Fetching accounts...');
+    console.log('Fetching accounts...\n');
+
     const browserCode = () => {
       const cleanup = (str) => {
         return str.trim().replace(/\s+/g, ' ').replace(/\n/g, '');

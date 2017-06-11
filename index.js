@@ -1,6 +1,8 @@
 #!/usr/bin/env node
 
-require('dotenv').config();
+require('dotenv').config({
+  path: require('path').join(require('os').homedir(), '.env')
+});
 
 require('yargs')
   .command(require('./src/commands/bbva'))

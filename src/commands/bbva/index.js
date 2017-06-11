@@ -8,6 +8,10 @@ module.exports = {
   handler: async function (argv) {
     const scraper = new Scraper();
 
+    if (!process.env.BBVA_DNI || !process.env.BBVA_USER || !process.env.BBVA_PASSWORD) {
+      throw new Error('Credentials not found. Check your .env file');
+    }
+
     await scraper.login({
       dni: process.env.BBVA_DNI,
       user: process.env.BBVA_USER,

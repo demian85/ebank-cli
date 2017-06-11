@@ -10,7 +10,7 @@ Check below for implemented services and examples.
 ## Usage
 A global installation is preferred:
 ```
-npm i -g
+npm i ebank-cli -g
 ```
 
 Now exec `ebank --help` for details on supported commands.
